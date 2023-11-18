@@ -1,19 +1,33 @@
 import ui from "./ui";
 
-it("returns class names from component with string value", () => {
-  const className = ui({
-    Component: "class-name",
+describe("single component as string", () => {
+  it("should return its class names when declared as string", () => {
+    const className = ui({
+      Component: "class-name",
+    });
+
+    expect(className("Component")).toBe("class-name");
   });
+  it("should return its class names when declared as object with truthy value", () => {
+    const className = ui({
+      Component: "class-name",
+    });
 
-  expect(className("Component")).toBe("class-name");
-});
-
-it("returns class names from components with object value", () => {
-  const className = ui({
-    Component: {
-      _root: "class-name",
-    },
+    expect(
+      className({
+        Component: true,
+      }),
+    ).toBe("class-name");
   });
+  it("shouldn't return its class names when declared as object with falsy value", () => {
+    const className = ui({
+      Component: "class-name",
+    });
 
-  expect(className("Component")).toBe("class-name class");
+    expect(
+      className({
+        Component: false,
+      }),
+    ).toBe("");
+  });
 });

@@ -1,19 +1,24 @@
-export default function ui<
-  Component extends string,
-  ClassNames extends string,
-  //Variant extends string,
->(factory: Record<Component, ClassNames>) {
-  return function className(...pickers: Component[]) {
-    let classNames: string[] = [];
+import isObject from "./isObject";
+
+export default function ui<Component extends string, ClassNames extends string>(
+  factory: Record<Component, ClassNames>,
+) {
+  return function className(
+    ...pickers: (Component | Record<Component, boolean>)[]
+  ) {
+    let classNames: ClassNames[] = [];
 
     for (const picker of pickers) {
-      const typeofPicker = typeof picker;
+      if (typeof picker === "string") classNames.push(factory[picker]);
 
-      if (typeofPicker === "string") {
-        return factory[picker];
+      if (isObject(picker)) {
+        for (const key in picker) {
+          if (picker[key]) classNames.push(factory[key]);
+        }
       }
     }
 
-    return classNames.join(" ") as ClassNames;
+    // TODO: Join<ClassNames>
+    return classNames.join(" ");
   };
 }
