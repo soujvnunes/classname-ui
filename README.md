@@ -11,32 +11,36 @@ import ui from "classname-ui";
 
 const className = ui({
   /**
-   * Specify components with Capitalized property name with its class names
-   * directly as its value.
+   * Specify components with Capitalized property name with its
+   * default class names on a 'ROOT' sub-property.
    */
-  Link: "no-underline",
+  Link: {
+    ROOT: "no-underline",
+  },
   Button: {
-    /**
-     * Sub properties are the component variants. If they starts with
-     * underscore "_", are default properties which doesn't need to be
-     * specified on className params, but still are available to be so
-     * without the underscore.
-     */
-    _root: "flex items-center",
+    ROOT: "flex items-center",
+    // Sub-properties as object are component variants.
     variant: {
-      _filled: "bg-gray-300",
+      /**
+       * Note that upper-cased ones are the default properties which
+       * doesn't need to be specified on className params, but still are
+       * available to be so.
+       */
+      FILLED: "bg-gray-300",
       outlined: "border border-gray-300",
     },
     size: {
       sm: "h-2 py-1",
-      _md: "h-3 py-2",
+      MD: "h-3 py-2",
       lg: "h-4 py-3",
     },
   },
   Fade: {
-    root: "transition-opacity",
-    show: "opacity-100",
-    hide: "opacity-0",
+    ROOT: "transition-opacity",
+    variant: {
+      show: "opacity-100",
+      hide: "opacity-0",
+    },
   },
 });
 
@@ -58,7 +62,7 @@ function App() {
             // This will override what is settled as default for size
             "Button.sizeLg": bigger,
             // Can also be used "!" not-notation to remove class names conditionally
-            "Button.size!Md": !bigger,
+            "Button!root!sizeMd": !bigger,
           },
           // and add even more if necessary.
           "m-auto transition-[height,padding-left,padding-right]",
@@ -69,12 +73,12 @@ function App() {
       <Transition
         as="p"
         show={bigger}
-        enter={className("Fade.root")}
-        enterFrom={className("Fade.hide")}
-        enterTo={className("Fade.show")}
-        leave={className("Fade.root")}
-        leaveFrom={className("Fade.show")}
-        leaveTo={className("Fade.hide")}
+        enter={className("Fade")}
+        enterFrom={className("Fade.variantHide")}
+        enterTo={className("Fade.variantShow")}
+        leave={className("Fade")}
+        leaveFrom={className("Fade.variantShow")}
+        leaveTo={className("Fade.variantHide")}
       >
         That link is to big 😅
       </Transition>
